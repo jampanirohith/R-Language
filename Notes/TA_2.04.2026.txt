@@ -1,0 +1,110 @@
+##### Use of Optim() function ##########
+
+# Q1. Beta distribution
+x <- rbeta(100, shape1 = 2, shape2 = 5)
+
+neg_loglik <- function(par){
+  
+  a <- par[1]
+  b <- par[2]
+  
+  -sum(dbeta(x, shape1 = a, shape2 = b, log = TRUE))
+}
+
+
+result <- optim(
+  par = c(1, 1),             # initial guesses
+  fn = neg_loglik
+)
+
+result$par
+
+
+
+# Q2: From problem set 4 --------------------------------------------------
+
+##f(x)= c(1 + theta * x) -> c=1+(theta/2)
+
+
+
+# Generate data using inverse transform
+
+n <- 100
+theta <- 2
+
+u <- runif(n)
+
+x <- (-1 + sqrt(1 + 2*theta*u*(1 + theta/2))) / theta
+# check range
+range(x)
+
+
+# Negative Log-Likelihood
+neg_loglik <- function(theta){
+  
+  -sum(log(1 + theta*x)) + length(x)*log(1 + theta/2)
+}
+
+# Use optim()
+
+result <- optim(
+  par = 0.5,
+  fn = neg_loglik,
+  method = "L-BFGS-B",
+  lower = -0.99  ## theta > -1
+)
+
+result$par
+
+
+#Plot
+theta_seq <- seq(-0.9, 5, length=1000)
+
+loglik <- sapply(theta_seq, function(t){
+  -neg_loglik(t)
+})
+
+plot(theta_seq, loglik, type="l", lwd=2,
+     xlab="theta", ylab="Log-Likelihood")
+
+abline(v=result$par, col="red", lwd=2)
+
+
+### Calculation for MSE and bias  ##################
+n <- 500
+theta_true <- 2
+rep <- 500
+theta_mle <- numeric(rep)
+
+
+# Negative Log-Likelihood
+neg_loglik <- function(theta){
+  
+  -sum(log(1 + theta*x)) + length(x)*log(1 + theta/2)
+}
+
+
+for (i in 1:rep){
+u <- runif(n)
+x <- (-1 + sqrt(1 + 2*theta_true*u*(1 + theta_true/2))) / theta_true
+# Use optim()
+
+result <- optim(
+  par = 0.5,
+  fn = neg_loglik,
+  method = "L-BFGS-B",
+  lower = -0.99  ## theta > -1
+)
+
+theta_mle[i] <- result$par
+}
+
+
+# Bias and MSE
+# -----------------------------
+bias <- mean(theta_mle - theta_true)
+mse  <- mean((theta_mle - theta_true)^2)
+
+# Output
+bias
+mse

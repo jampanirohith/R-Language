@@ -1,0 +1,91 @@
+##In R plots can be created
+#bar plot,piechart, box plot, grouped box plot, scatter plot, Co plot, Histogram, Normal QQplot
+
+
+#A barplot (or barchart) is a data visualization tool that represents categorical data with 
+#rectangular bars, where the height or length of each bar is proportional to the numeric value 
+#it represents. It is used for comparing different categories, displaying rankings, and showing 
+#trends across grouped data, with options for vertical or horizontal orientation.
+
+
+#code of qualifications of 10 persons by using 1 for graduates(G)
+# and 2 for non graduate(N)
+#G,N,G, N,G,G,G,N,G,G
+qualification= c(1,2,1,2,1,1,1,2,1,1)
+qualification
+barplot(qualification) # this is not what we needed
+table(qualification) # gives frequency of observations
+barplot(table(qualification)) # height with frequency
+barplot(table(qualification)/length(qualification),
+        col = c("blue","green"),
+         main="graduates and non graduates",
+        ylab="probability/frequency",
+        xlab="Graduates or non-Graduates", 
+        names.arg=c("Graduates","Non-Graduates")) # height with probability, colours,x y axes labeled, heading
+
+#A stacked bar plot visualizes the composition of multiple categorical variables by stacking sub-bars 
+#end-to-end on top of one another. data is in matrix fomat
+#data on number of customers visiting 3 shops on 4 different days
+
+customers=matrix(nrow=4,ncol=3,
+                 data=c(2,26,42,30,20,53,15,75,30,40,25,100))
+customers
+#barplot(variable in matrix format)
+#will create a subdivided or component bar diagram with columns of matrix as bars
+barplot(customers, ylab="number of customers", xlab="shops",
+        names.arg=c("Shop1","Shop2","Shop3"),
+        col=c("blue","green","yellow","red"),main="stacked barplot")
+
+#A pie chart is a circular data visualization tool that displays numerical proportions by dividing a circle into slices.
+pie(qualification) # not what we needed
+pie(table(qualification),labels=c("Graduate", "Nongraduate"),
+    main="qualification", col=c("red","yellow"))
+#3D pie chart
+#install package plotrix
+pie3D(table(qualification),labels=c("Graduate","Nongraduate"),
+      main="qualification",col=c("yellow","violet"),explode=0.2)
+
+#Let's take 'painters' data from "MASS" library, for more information on painters dataset search 'painters' in help tab
+View(painters)
+colnames(painters) #column headings/names of data
+table(painters$School)
+pie3D(table(painters$School),explode=0.4,
+      col=c("violet","cyan","green","yellow","red","pink","blue","brown"),
+      labels=paste(levels(painters$School),
+                   round(table(painters$School)/length(painters$School)*100),
+                   "%",sep="",main="schools of painters")
+barplot(table(painters$School)/length(painters$School)) 
+#round(table(painters$School)/length(painters$School)*100)
+#levels(painters$School)
+
+#A treemap is a data visualization technique that displays hierarchical data as a set of nested rectangles, with size and color proportional to data values.
+#install package 'treemap'
+
+treemap(painters,index="School",vSize="Composition")
+data("business")
+View(business)
+treemap(business,index=c("NACE1","NACE2","NACE3"),
+        vSize="turnover",type="index")
+treemap(business,index=c("NACE1","NACE2","NACE3"),
+        vSize="employees",type="index")
+
+#A histogram is a graphical tool used to visualize the distribution of numerical data by grouping data points into continuous, equal-width intervals called "bins" or "classes".
+hist(painters$Composition,freq=F,
+     main="probability density of composition scores point",
+     xlab="Composition score",col="skyblue") #histograms on painters dataset
+hist(painters$Drawing) # for more info search 'hist' in help
+
+#Kernel Density Estimation (KDE) is a non-parametric method used to estimate the probability density function (PDF) of a random variable, creating a smooth, continuous curve from discrete data points.
+
+plot(density(painters$Drawing))
+#there are different smoothing kernels used in R. This must partially match one of "gaussian", "rectangular", "triangular", "epanechnikov", "biweight", "cosine" or "optcosine", with default "gaussian".
+plot(density(painters$Drawing,kernel = "epanechnikov"))
+
+plot(density(painters$Composition,adjust=0.5))
+plot(density(painters$Composition,adjust=2)) # see change in smoothness, for more info search 'density' in help.
+
+#A stemplot (or stem-and-leaf plot) is a graphical tool used in statistics to organize and visualize small-to-medium quantitative datasets (typically 
+#observations) by splitting each number into a "stem" (leading digits) and a "leaf" (last digit). It displays data distribution, shape, and outliers
+# similarly to a histogram while retaining the original numerical values. 
+defective=c(46,24,53,40,18,34,65,54,66,35,48,56,73,38,49)
+stem(defective,scale=2) # change scale value to get better stem plot, for more info search 'stem' in help

@@ -1,0 +1,92 @@
+# we will study about how to generate random numbers from well known distributions and their distribution function, quantile function, and density function
+
+#uniform discrete
+# we can generate uniform discrete distribution using sample(), with "replace=TRUE", for more info search in help
+#Suppose there is 10 lots in a box which marked as 1 to 10 and you are selecting lot with replacement . 
+
+a<-sample(1:10,size=10000,replace=TRUE) #generate "size" numbers from 1:10
+mean(a)
+var(a)
+table(a)                                   # change the size and see the differences in barplot
+table(a)/length(a)
+barplot(table(a)/length(a),ylim=c(0,0.15))
+
+
+#binomial
+#P(X=x)
+dbinom(x, size, prob, log = FALSE)
+#P(X<=q)
+pbinom(q, size, prob, lower.tail = TRUE, log.p = FALSE)
+#smallest value x such that F(x)>=p
+qbinom(p, size, prob, lower.tail = TRUE, log.p = FALSE)
+#generate random numbers
+rbinom(n, size, prob)
+# for more info search rbinom in help
+# we are finding probability mass function of bin(100,0.5) and ploting
+k=0:100
+prob_mass=dbinom(x=k,100,prob=0.5)
+plot(x=k,y=prob_mass,main="Probability mass function of binomial distribution")
+plot(x=k,y=prob_mass,main="Probability mass function of binomial distribution",type="h") # possible types in plot() are "p" for points, "l" for lines, "b" for both,
+#"c" for the lines part alone of "b", "o" for both ‘overplotted’, "h" for ‘histogram’ like (or ‘high-density’) vertical lines, "s" for stair steps,
+#"S" for other steps, see ‘Details’ below,"n" for no plotting. you can explore these types
+
+pbinom(48,100,0.5) # gives P(X<=48) X~Bin(100,0.5)
+pbinom(48,100,0.5,lower.tail=FALSE) #P(X>48), check if both sums to 1
+prob_dist=pbinom(q=k,100,prob=0.5,lower.tail=TRUE)
+plot(x=k,y=prob_dist,main="Probability dist function of binomial distribution") #distribution function plot
+plot(x=k,y=prob_dist,main="Probability dist function of binomial distribution",type="s",col='blue')
+points(x=k,y=prob_dist,pch=16,col='red') 
+
+qbinom(p=0.5, 100, 0.5) #finding median value of Bin(100,0.5), you can find other quantile points by changing p 
+
+#generating random numbers from binom(10,0.7)
+g=rbinom(n=10000,size=10,prob=0.7) #change n and size and see the difference in mean
+mean(g) #mean should be around 7 for the above case
+
+
+# similar arguments are there for poisson and geometric distributions
+#Do similar arguments on poisson and geometric 
+dpois(x, lambda, log = FALSE)
+ppois(q, lambda, lower.tail = TRUE, log.p = FALSE)
+qpois(p, lambda, lower.tail = TRUE, log.p = FALSE)
+rpois(n, lambda)
+
+
+dgeom(x, prob, log = FALSE)
+pgeom(q, prob, lower.tail = TRUE, log.p = FALSE)
+qgeom(p, prob, lower.tail = TRUE, log.p = FALSE)
+rgeom(n, prob)
+
+#normal distribution
+dnorm(x, mean, sd, log = FALSE) # gives pdf value at x, if you give dnorm(x) it will give pdf of standard normal at x
+#plotting normal density function
+curve(dnorm(x,mean=2,sd=2), xlim=c(-1,5), ylab="Density", main="Normal density function with mean 2 and variance 4) 
+# change mean and sd and xlim and observe the differences 
+
+#for finding P[X<=q] where X follows normal distribution we use pnorm(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
+pnorm(18, mean=20,sd=2) # for finding P[X<=18], if you give pnorm(x) it will give cdf of standard normal at x
+pnorm(18, mean=20,sd=2,lower.tail=FALSE) # for finding P[X>18]
+pnorm(21, mean=20,sd=2)-pnorm(17, mean=20,sd=2) #P[17<X<20]
+#P(X<=18) for norm(mean=20,sd=2)=P((X-20)/2<=(18-20)/2)=P(Z<=-1)
+pnorm(-1)  #Change mean sd and q and observe
+
+#finding quantile points of normal
+#for standard normal you can give qnorm(p), for other normal distribution specify mean and sd
+qnorm(0.9, mean=20, sd=2)
+qnorm(0.1, mean=20, sd=2,lower.tail=FALSE) #Both are same
+# change mean sd and p and observe
+#generating random numbers 
+#we want to generate 4 random numbers from normal(mean=20,sd=2)
+rnorm(4,20,2)
+
+x=rnorm(10,20,2) 
+mean(x)
+var(x) # change number of observation(n) and check the mean and var are matching
+
+
+#Do similar operations on exponential
+dexp(x, rate = 1, log = FALSE)
+pexp(q, rate = 1, lower.tail = TRUE, log.p = FALSE)
+qexp(p, rate = 1, lower.tail = TRUE, log.p = FALSE)
+rexp(n, rate = 1)
+

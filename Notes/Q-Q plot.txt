@@ -1,0 +1,44 @@
+#Q-Q plot
+#Suppose we have two data
+A=c(0,2,4,6,8,10)
+B=c(10,8,6,4,2,0)
+#how we can check that both have same distribution
+#we use qqplot, wher we plot quantile points of one to other
+qqplot(A,B)
+abline(0,1,col="red")
+#if every points are lying in straight line we can say both have same distribution
+C=c(10,5.12,2.16,0.64,0.08,0)
+qqplot(A,C)
+abline(0,1,col="red")
+#Here we can see points are not lying in straight line, so both have different distributions
+
+
+#Comparing with normal is important
+x<- rnorm(10000)
+#qqnorm compares our data with standard normal
+qqnorm(x)
+qqline(x, col="red",lwd=2)#qqline adds straight line which connects first quartile and third quartile
+
+
+y<-rexp(10000)#from exponential dist
+qqnorm(y)
+qqline(y)# you can see its not matching, we can use qqplot and compare with exponential dist
+qqplot(qexp(ppoints(10000),1),y,xlab='theoretical quantiles',ylab='sample quantiles')
+abline(0,1,col="green",lwd=3)
+#here we can see its matching
+#for more info on ppoints use "help" ;)
+
+#suppose our data follow weibull
+r=rweibull(1000,shape=2,scale=3)
+s=qweibull(ppoints(1000),2,3)
+qqplot(s,r,xlab='theoretical quantiles',ylab='sample quantiles')
+abline(0,1,col="green",lwd=3)
+
+x.wei<-rweibull(n=2000,shape=2.1,scale=1) ## sampling from a Weibull distribution with parameters shape=2.1 and scale=1.1
+x.teo<-rweibull(n=2000,shape=2, scale=1) ##sampling from a Weibull distribution with paramters shape=2 e scale=1
+qqplot(x.teo,x.wei,main="QQ-plot distr. Weibull") ## QQ-plot
+abline(0,1,col="cyan",lwd=2.5) ## a 45-degree reference line is plotted
+#you can observe its not matching
+
+#for theoretical quantiles its better to use quantiles of ppoints than random generating
+

@@ -1,0 +1,68 @@
+#Finding CI for mean when variance is unknown
+#\bar(X)-\mu/(S/\sqrt(n))~t(n-1)
+#n>30 we can say t(n-1)~N(0,1)
+#20 day temp of particular city
+#Find CI of the mean of the given data (two sided)
+temp<-c(40.2,32.8,38.2,43.5,47.6,36.6,38.4,45.5,44.4,40.3,34.6,55.6,50.9,38.9,
+        37.8,46.8,43.6,39.5,49.9,34.2)
+n=length(temp)
+Xbar=mean(temp)
+S=sqrt(var(temp))
+qt(0.025,19)
+qt(0.975,19)#one is negative of other, since t density is symmetric
+Lower=Xbar+qt(0.025,19)*S/sqrt(n)
+Upper=Xbar-qt(0.025,19)*S/sqrt(n)
+cat(Lower,Upper)
+#You can also apply directly
+lower=mean(temp)-qt(0.975,19)*sqrt(var(temp)/20)
+upper=mean(temp)+qt(0.975,19)*sqrt(var(temp)/20)
+cat(lower,upper) #see you can use 0.975 quantile but sign will reverse since its negative of previous
+mean(temp)-qt(0.95,19)*sqrt(var(temp)/20) #upper confidence bound for one-sided
+mean(temp)+qt(0.95,19)*sqrt(var(temp)/20) #lower confidance bound for one sided
+
+
+#you can also find CI using t.test argument
+t.test(temp,conflevel=0.975)$conf.int    #two sided
+t.test(temp,conflevel=0.95,alternative="less")$conf.int  #onesided
+t.test(temp,conflevel=0.95,alternative="greater")$conf.int #one-sided
+
+
+#Finding CI for var
+#(n-1)S^2/\sigma^2~chisquare(n-1)
+var(temp)
+qchisq(0.025,19)
+qchisq(0.975,19)# see both are not symmetric as t
+lower=(length(temp)-1)*var(temp)/qchisq(0.975,19)
+upper=(length(temp)-1)*var(temp)/qchisq(0.025,19)
+cat(lower,upper)
+(length(temp)-1)*var(temp)/qchisq(0.95,19)#lower confidance bound for one sided
+(length(temp)-1)*var(temp)/qchisq(0.05,19)#upper confidence bound for one-sided
+
+
+#These codes might not run in some versions
+install.packages("Envstats")#to check CI 
+library(EnvStats)
+varTest(temp,alternative="two.sided",conf.level=0.95)$conf.int #twosided conf int for variance
+varTest(temp,alternative="greater",conf.level=0.95)$conf.int #for one sided
+varTest(temp,alternative="less",conf.level=0.95)$conf.int #one sided
+
+#you can also use Desctools package
+install.packages("DescTools")
+library(DescTools)# Here the argument is VarTest
+VarTest(temp,alternative="two.sided",conf.level=0.95)$conf.int
+VarTest(temp,alternative="less",conf.level=0.95)$conf.int
+VarTest(temp,alternative="greater",conf.level=0.95)$conf.int
+
+
+#You can also use VarCI which gives CI of variance only
+VarCI(temp,method="classic",conf.level=0.95,sides="two.sided")
+VarCI(temp,method="classic",conf.level=0.95,sides="left")
+VarCI(temp,method="classic",conf.level=0.95,sides="right")# you can change methods to "bonett", "norm", "basic", "stud", "perc", "bca" Explore these
+
+#CI for standard deviation
+sqrt(length(temp)-1)*var(temp)/qchisq(0.975,19))
+sqrt(length(temp)-1)*var(temp)/qchisq(0.025,19))
+
+
+
+

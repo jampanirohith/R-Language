@@ -1,0 +1,147 @@
+
+
+
+# Draw the normal curve for different n -----------------------------------
+
+
+# Q1. Draw for different sample sizes n
+Density_Normal_mean= function(n, col){
+  rep =100000
+  mu=0
+  sigma_2=1
+  
+  M <- numeric(rep)
+  for (i in 1:rep){
+    x <- rnorm(n, mu, sigma_2)
+    M[i] <- mean(x)
+  }
+  lines(density(M), col=col, lwd=2)
+}
+
+
+# create empty plot first
+plot(NULL, xlim=c(-1.5,1.5), ylim=c(0,10),
+     xlab="Sample Mean",
+     ylab="Density",
+     main="Density of Sample Mean for Different n")
+
+# draw curves using the function
+Density_Normal_mean(10,"red")
+Density_Normal_mean(30,"blue")
+Density_Normal_mean(100,"green")
+Density_Normal_mean(500,"purple")
+
+legend("topright",
+       legend=c("n=10","n=30","n=100","n=500"),
+       col=c("red","blue","green","purple"),
+       lwd=1)
+
+
+
+
+
+
+# Weak Law of Large Numbers -----------------------------------------------
+# Convergence of bernouli trial (convergence in probability)
+# Q2. see the convergence of sampling distribution of the mean
+
+X <- sample(c(0,1),size=10, replace= TRUE)
+mean(X)
+
+X <- sample(c(0,1),size=1000, replace= TRUE)
+mean(X)
+
+
+
+#### weak law for bernouli trials
+x <- sample(c(0,1),1000,replace=TRUE)
+
+sample_mean <- cumsum(x)/(1:1000)
+
+plot(sample_mean,type="l",lwd=2,
+     ylab="Proportion of Heads",
+     xlab="Number of Tosses")
+
+# True mean line
+abline(h=0.5,col="red",lwd=2)
+
+
+# Q3. Weak Law of large numbers
+#### weak law for Normal distribution
+n <- 1000
+x <- rnorm(n,10,0.01)
+
+sample_mean <- cumsum(x)/(1:n)  #running sample mean
+
+plot(sample_mean, type="l", col="blue", lwd=2,
+     xlab="n",
+     ylab="Sample Mean",
+     main="Weak Law of Large Numbers")
+
+abline(h=10, col="red", lwd=2)
+# The sample mean fluctuates initially
+# As n increases → it stabilizes near 0
+
+
+
+
+
+
+# Question 6 --------------------------------------------------------------
+
+rep <- 1000
+n_values <- c(10, 50, 100, 200)
+eps <- 0.2
+
+results <- numeric(length(n_values))
+
+for (j in 1:length(n_values)) {
+  
+  n <- n_values[j]
+  means <- numeric(rep)
+  
+  for (i in 1:rep) {
+    x <- rnorm(n, 0, 1)
+    means[i] <- mean(x)
+  }
+  
+  # Estimate probability
+  results[j] <- mean(abs(means - 0) > eps)
+}
+
+# Display results
+data.frame(n = n_values, Probability = results)
+
+
+# CLT ---------------------------------------------------------------------
+
+# CLT demonstration using Exponential distribution
+
+rep <- 5000          # number of simulations
+n_values <- c(5, 10, 30, 50)
+
+par(mfrow = c(2,2))  # 4 plots in one window
+
+for(n in n_values){
+  
+  means <- numeric(rep)
+  
+  for(i in 1:rep){
+    x <- rexp(n, rate = 1)   # non-normal data
+    means[i] <- mean(x)
+  }
+  
+  hist(means, probability = TRUE,
+       main = paste("Sample Mean (n =", n, ")"),
+       xlab = "Sample Mean",
+       col = "lightblue",
+       border = "white")
+  
+  # Overlay normal curve
+  curve(dnorm(x, mean = 1, sd = 1/sqrt(n)),
+        col = "red", lwd = 2, add = TRUE)
+  
+  abline(v = 1, col = "darkgreen", lwd = 2)
+}
+
+

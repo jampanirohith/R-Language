@@ -1,0 +1,182 @@
+#Needs for drawing statistical inference
+
+#Why are we doing statistcal inference
+
+#Drawing  conclusions from sample to represent 
+#the population
+
+#one expects to be able to draw some conclusions 
+#about the population as a whole
+
+#some assumptions are required for collecting 
+#the observations as well as for the 
+#statistical tools
+
+
+#sample
+#X_i are iid ...random sample of size n from F
+# representative of the population
+
+#in many applications, the population df is unknown and
+#unspecified
+
+#Parametric and nonparametric inference
+
+#the setup in which the form of the underlying distr
+#is known through its parameters. the inference
+#drawn is parametric inferences
+
+#if the underlying distr is unknown
+# and its free from parameters
+
+
+#statistical methods are used to make decisions
+#and conclusions about popln
+
+
+
+#point estimate
+
+#properties of point estimate
+
+#primary goal of statistical inference is to find 
+#a good estimate of popln parameter
+
+
+
+#Unbiased estimators
+
+#thetahat is said to be unbiased if its expectation
+#is theta
+#this is a finite sample property
+
+#bias=E(thetahat)-theta
+
+#consider a popln of size 3. 
+
+#X1=1,X2=3,X3=5
+
+#popln mean=3
+
+#no of samples of size 2 is 3C2=3
+#Suppose the population mean is unknwn
+#We can use sample  arithmetic mean to estimate
+#popln mean
+
+#The samples can be
+#(1,3),(1,5),(3,5)
+#sample mean of each sample is 
+# 2,3,4
+#E(sample mean)=(2+3+4)/2=3=popln mean
+#implies Xbar is an UBE of ppln mean
+
+
+
+
+
+#rep no of times a sample is generated
+#n no of obsn
+
+
+unbiasednormal=function(n,rep){
+  out=matrix(nrow=rep,ncol=4,data=0)
+  #In R, setting data=0 in the matrix() function creates a
+  #matrix where all elements are initialized with the value 0.
+  #This is a common method for creating a "zero matrix" 
+  #of a specified size.
+  colnames(out)=c("Mean","Variance","Median","Sum_dev_frm_M")
+  mu=10
+  sigma2=25
+  for(r in 1:rep){
+    x=rnorm(n,mu,sqrt(sigma2))
+    out[r,1]=mean(x)
+    out[r,2]=var(x)
+    out[r,3]=median(x)
+    out[r,4]=sum(x-median(x)^2)
+  }
+  out
+  cat("Expectation of sample mean is ",mean(out[,1]),"\n")
+  cat("Expectation of sample variance is ",mean(out[,2]),"\n")
+  cat("Expectation of sample median is ",mean(out[,3]),"\n")
+  cat("Expectation of sum(x-median(x)^2) is ",mean(out[,4]),"\n")
+}
+
+
+unbiasednormal(100,3) 
+#We are taking 3 sets of samples and then the expectation of the
+#estimator is found out
+#It will be close to the popln parameter if the estimator
+#is unbiased
+
+unbiasednormal(1000,300)
+
+
+ #sample mean is an ube of mu
+#but median is not.
+
+
+#We need to impose more criterias to tell which estimator is better
+#when we have 2 unbiased estimators
+
+#we say that a person is more efficient than the other in jon
+#if he/she does the work in less time with less no of mistakes
+
+#IIIly we have efficiency
+
+#Var(thetahat)=E(thetahat-E(thetahat))^2
+#MSE(thetahat)=E(thetahat-theta)^2 =V(thetahat)+(Bias(thetahat))^2
+
+
+#Relative efficiency of theta1hat to theta1hat is
+#var(theta1hat)/var(theta2hat)
+
+
+#MVUE
+#choose the one with minm variane among all the ube
+
+#UMVUE
+
+#Let the 3 etimators be:
+#mu1hat=xbar
+#mu2hat=(x1+x2)/2
+#mu3hat=x1
+
+
+
+#efficiency
+
+varnormal=function(n,rep){
+  out=matrix(nrow=rep,ncol=3,data=0)
+  mu=10
+  sigma2=25
+  for(r in 1:rep){
+    x=rnorm(n,mu,sqrt(sigma2))
+    out[r,1]=mean(x)
+    out[r,2]=x[1]
+    out[r,3]=(x[1]+x[2])/2
+  }
+  cat(var(out[,1]),var(out[,2]),"\n")
+}
+
+
+varnormal(1000,50)
+varnormal(1000,500)
+varnormal(1000,5000)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

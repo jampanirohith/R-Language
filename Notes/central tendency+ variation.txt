@@ -1,0 +1,138 @@
+#Central tendency of data
+
+
+#There are different measures of central tendency
+#arithmetic mean, geometric mean, harmonic mean, median,
+#quantiles, Mode, etc...
+
+#in a class, some students might have got 45%, somebody has
+#got 55%, somebody has got 65% and there will be more marks,
+#but then, I am more interested, what is the average performance
+#of the class? So, if I say here: that the average mass in
+#the subject in a class are 60%, then it makes more sense.
+
+#1.mean
+
+
+#let us take race times of 20 persons
+
+time=c(32,35,45,83,79,55,68,38,35,55,66,65,42,68,72,79,67,36,42,58)
+mean(time)
+
+#if there are some missing data points
+
+time_NA=c(NA,NA,45,83,79,55,68,38,35,55,66,65,42,68,72,79,67,36,42,58)
+mean(time_NA,na.rm=T)
+
+#weighted mean
+#for data given as observations and their frequency we use weighted mean
+wt <- c(5,  5,  4,  1)
+x <- c(3.7,3.3,3.5,2.8)
+xm <- weighted.mean(x, wt)
+xm
+
+# cut divides the range of x into intervals and codes 
+#the values in x according to which interval they fall.
+#The leftmost interval corresponds to level one, the next 
+#leftmost to level two and so on.
+#Here we cut 'time' to intervals 
+
+breaks=seq(30,90,by=10)
+breaks
+time.cut=cut(time,breaks,right=FALSE)
+time.cut
+table(time.cut)
+f=as.numeric(table(time.cut))
+m=c(35,45,55,65,75,85)
+weighted.mean(m,f)
+
+#median
+
+median(time)
+median(time_NA,na.rm=T) #if there is missing values
+
+#quartiles
+quantile(time) #gives quartile values
+quantile(time, probs=seq(0,1,0.1)) #decile
+quantile(time, probs=seq(0,1,0.01)) #percentile
+
+#One of the nine quantile algorithms discussed in Hyndman and Fan (1996), selected by type, is employed.
+#type 1,2,3 for discrete data and type 4-9 for continuous data
+
+quantile(time, probs=seq(0,1,0.01),type=1)
+quantile(time, probs=seq(0,1,0.01),type=2)
+quantile(time, probs=seq(0,1,0.01),type=3)
+#for more details search 'quantile' in help tab and READ 
+#for particular probabilities you can find corresponding quantile values
+quantile(time, 1/19)
+quantile(time, c(1/19,2/19,5.5/19,9/19,17.9/19))
+#if there are missing values in data
+quantile(time_NA,na.rm=T)
+
+#suppose if fruit juice shop opener wants to know 
+#which of the fruit juice is more preferred 
+#a clothing shop owner wants to know that size of which 
+#of shirt or say trouser is more in demand or say highest 
+#in demands and so on. So here in such cases the concept of 
+#mode is used.
+#Here we use singer data set, which has heights in inches of the singers in the New York Choral Society in 1979. The data are grouped according to voice part.
+# built-in base R function mode() returns the internal storage type or "mode" of an R object (e.g., "numeric", "character", "logical", "list", etc.),
+#to find mode of the data
+modetable=table((singer$height))
+modetable
+names(modetable)[modetable==max(modetable)]
+#Geometric mean
+#used to find averge rate of interest and increase (time)
+wt <- c(5,  5,  4,  1)
+x <- c(3.7,3.3,3.5,2.8)
+(prod(x))^(1/length(x))
+prod(x^wt)^(1/sum(wt)) #if the frequency is given
+#harmonic mean
+#used to find average speed when the distance travelled are same
+1/(mean(1/x))
+1/(weighted.mean(1/x,wt)) #for data with frequency
+
+#measures of variations or different measures of dispersions,
+#they help in measuring the spread and scatterdness of the 
+#data around any point, and preferably the arithmetic mean 
+#value. Now, there are different types of measures which are 
+#available in statistics. range,
+#interquartile range, quartile deviation, absolute mean 
+#deviation, variance, standard deviation
+
+#Range is defined as the difference between the maximum and minimum value
+max(time)-min(time)
+max(time_NA,na.rm=T)-min(time_NA,na.rm=T)
+#in-built 'range()' gives both maximum and minimum value
+range(time)
+range(time_NA)
+range(time_NA,na.rm=T)
+
+#interquartile range is the difference between the third quartile point and first quartile point
+IQR(time)
+IQR(time_NA,na.rm=T)
+#quartile deviation
+#half of IQR
+IQR(time)/2
+IQR(time_NA,na.rm=T)/2
+
+# absolute deviation about a point
+mean(abs(time-50))
+mean(abs(time_NA-50),na.rm=T)
+
+#absolute mean deviaton 
+mean(abs(time-median(time)))
+mean(abs(time_NA-median(time_NA,na.rm=T)),na.rm=T)
+#mean absolute deviation about mean
+mean(abs(time-mean(time)))
+
+
+#variance 
+var(time)
+var(time_NA,na.rm=T)
+#Standard deviation
+sqrt(var(time))
+#coefficient of variation
+sqrt(var(time))/mean(time)
+#sometimes coefficient of variation is given in % then 
+sqrt(var(time))/mean(time)*100
